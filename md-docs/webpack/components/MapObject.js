@@ -14,11 +14,11 @@ export default class MapObject extends Component {
     return (
       <div>
         <div onClick={() => this.onClick()}>
-          <strong className="object">{this.props.mykey}</strong>
+          <strong style={styles.object}>{this.props.mykey}</strong>
           ({this.props.type}):
-          <span className="description">{this.props.description}</span>
+          <span style={styles.description}>{this.props.description}</span>
         </div>
-        <span className={this.state.collapsed ? 'hidden' : 'active'}>
+        <span style={this.state.collapsed ? styles.hidden : styles.active}>
           <ul>
             {this.props.children}
           </ul>
@@ -27,3 +27,21 @@ export default class MapObject extends Component {
     );
   }
 }
+
+const styles = {
+  listItem: {
+    listStyle: 'none',
+  },
+  description: {
+    fontSize: '15px'
+  },
+  object: {
+    color: '#0F4C93'
+  },
+  active: {
+    display: 'block'
+  },
+  hidden: {
+    display: 'none'
+  },
+};

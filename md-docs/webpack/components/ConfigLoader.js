@@ -3,7 +3,7 @@ import config from './output.js';
 import MapObject from './MapObject';
 import TableView from './TableView';
 
-class Hello extends Component {
+export default class ConfigLoader extends Component {
   constructor() {
     super();
   this.state = {
@@ -14,11 +14,28 @@ class Hello extends Component {
   }
   componentWillMount() {
     const props = config.properties;
+    console.log(props);
     this.setState({keys: Object.keys(props), props: props});
     this.mapPropsToComponents(props);
   }
   onClick(key) {
     this.setState({selected: key});
+  }
+  mapPropsToJSON(props, initial) {
+    Object.keys(props).map((key, index) => {
+      const type = props[key].type;
+      switch (type) {
+        case 'string':
+          initial[key] = "string"
+          break;
+        case 'object':
+          initial[key] = this.mapPropsToJSON(props[key].properties, {});
+          break;
+        default:
+          break;
+      }
+    });
+    return initial;
   }
   mapPropsToComponents(props) {
     return Object.keys(props).map((key, index) => {
@@ -26,7 +43,7 @@ class Hello extends Component {
       switch(type) {
         case 'object':
           return (
-            <li key={key}>
+            <li style={styles.listItem} key={key}>
               <MapObject mykey={key} type={type} description={props[key].description}>
                 {this.mapPropsToComponents(props[key].properties)}
               </MapObject>
@@ -34,9 +51,9 @@ class Hello extends Component {
           );
         default:
           return (
-            <li key={key}>
+            <li style={styles.listItem} key={key}>
               <strong>{key}</strong>
-              ({props[key].type}): <span className="description">{props[key].description}</span>
+              ({props[key].type}): <span style={styles.description}>{props[key].description}</span>
             </li>
           );
       }
@@ -54,12 +71,19 @@ class Hello extends Component {
   render() {
     const items = this.mapPropsToComponents(this.state.props);
     return (
-      <div className="App swagger-ui">
-        <div className="links">
+      <div style={styles.App}>
+        <div style={styles.links}>
           <button onClick={this.showJSONView.bind(this)}>JSON view</button>
           <button onClick={this.showTableView.bind(this)}>Table view</button>
         </div>
         <br />
+        <pre>
+          <code>
+            <pre>
+              {JSON.stringify(this.mapPropsToJSON(this.state.props, {}), null, 2)}
+            </pre>
+          </code>
+        </pre>
         <div className={this.isActive('table-view')}>
           <h2>Server Configuration</h2>
           <TableView config={this.state.props} />
@@ -73,7 +97,7 @@ class Hello extends Component {
           <TableView config={this.state.props.databases.properties.foo_db.properties.users.properties.foo_user.properties} />
         </div>
         <div className={this.isActive('json-view')}>
-          {'{'}<ul className="list">
+          {'{'}<ul style={styles.list}>
             {items}
             </ul>{'}'}
         </div>
@@ -82,6 +106,26 @@ class Hello extends Component {
   }
 }
 
-
-
-export default Hello;
+const styles = {
+  App: {
+    backgroundColor: 'rgba(0, 191, 255, 0.11)'
+  },
+  links: {
+    float: 'right'
+  },
+  listItem: {
+    listStyle: 'none',
+  },
+  description: {
+    fontSize: '15px'
+  },
+  container: {
+    padding: '10px'
+  },
+  ulMargin: {
+    marginLeft: '40px !important'
+  },
+  body: {
+    lineHeight: '1.3em'
+  }
+};

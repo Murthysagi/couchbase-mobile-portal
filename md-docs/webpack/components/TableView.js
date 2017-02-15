@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 
 export default class TableView extends Component {
-  componentWillMount() {
-    console.log(Object.keys(this.props.config));
-  }
   mapPropsToComponents(config) {
     return Object.keys(config).map((key, index) => {
       const type = config[key].type;
