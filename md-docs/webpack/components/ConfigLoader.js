@@ -2,6 +2,7 @@ import React, { Component, StyleSheet } from 'react';
 import config from './output.js';
 import MapObject from './MapObject';
 import TableView from './TableView';
+import 'whatwg-fetch'
 
 export default class ConfigLoader extends Component {
   constructor() {
@@ -13,9 +14,14 @@ export default class ConfigLoader extends Component {
     };
   }
   componentWillMount() {
-    const props = config.properties;
-    this.setState({keys: Object.keys(props), props: props});
-    this.mapPropsToComponents(props);
+    fetch('http://localhost:9000/tmp/sg.json')
+      .then(function(response) {
+        return response.json();
+      }).then(function(json) {
+        const props = json.properties;
+        this.setState({keys: Object.keys(props), props: props});
+        this.mapPropsToComponents(props);
+      }.bind(this));
   }
   onClick(key) {
     this.setState({selected: key});
@@ -52,7 +58,7 @@ export default class ConfigLoader extends Component {
           return (
             <li style={styles.listItem} key={key}>
               <strong>{key}</strong>
-              ({props[key].type}): <span style={styles.description}>{props[key].description}</span>
+              ({props[key].type}): <span style={styles.description}>{props[key].description} (Default: <code>{props[key].default}</code>)</span>
             </li>
           );
       }

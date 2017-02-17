@@ -10,13 +10,19 @@ export default class MapObject extends Component {
   onClick() {
     this.setState({collapsed: !this.state.collapsed});
   }
+  defaultValue(defaultValue) {
+    console.log(defaultValue)
+    if (defaultValue) {
+      return '(Default: `' + defaultValue + '`)'
+    }
+  }
   render() {
     return (
       <div>
         <div onClick={() => this.onClick()}>
           <strong style={styles.object}>{this.props.mykey}</strong>
           ({this.props.type}):
-          <span style={styles.description}>{this.props.description}</span>
+          <span style={styles.description}> {this.props.description} {this.defaultValue(this.props.default)}</span>
         </div>
         <span style={this.state.collapsed ? styles.hidden : styles.active}>
           <ul>
