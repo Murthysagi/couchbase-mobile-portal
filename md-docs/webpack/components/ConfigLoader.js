@@ -72,11 +72,6 @@ export default class ConfigLoader extends Component {
     const items = this.mapPropsToComponents(this.state.props);
     return (
       <div style={styles.App}>
-        <div style={styles.links}>
-          <button onClick={this.showJSONView.bind(this)}>JSON view</button>
-          <button onClick={this.showTableView.bind(this)}>Table view</button>
-        </div>
-        <br />
         <h2>Explorer</h2>
         <div className={this.isActive('json-view')}>
           {'{'}<ul style={styles.list}>
@@ -93,15 +88,15 @@ export default class ConfigLoader extends Component {
         </pre>
         <h2>Table View</h2>
         <div>
-          <h2>Server Configuration</h2>
+          <h3>Server Configuration</h3>
           <TableView config={this.state.props} />
-          <h2>Database Configuration</h2>
+          <h3>Database Configuration</h3>
           <TableView config={this.state.props.databases.properties.foo_db.properties} />
-          <h2>CORS Configuration</h2>
+          <h3>CORS Configuration</h3>
           <TableView config={this.state.props.CORS.properties} />
-          <h2>Cache Configuration</h2>
+          <h3>Cache Configuration</h3>
           <TableView config={this.state.props.databases.properties.foo_db.properties.cache.properties} />
-          <h2>User Configuration</h2>
+          <h3>User Configuration</h3>
           <TableView config={this.state.props.databases.properties.foo_db.properties.users.properties.foo_user.properties} />
         </div>
       </div>
@@ -111,7 +106,6 @@ export default class ConfigLoader extends Component {
 
 const styles = {
   App: {
-    backgroundColor: 'rgba(0, 191, 255, 0.11)'
   },
   links: {
     float: 'right'
