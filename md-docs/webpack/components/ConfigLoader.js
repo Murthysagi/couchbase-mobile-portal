@@ -14,7 +14,6 @@ export default class ConfigLoader extends Component {
   }
   componentWillMount() {
     const props = config.properties;
-    console.log(props);
     this.setState({keys: Object.keys(props), props: props});
     this.mapPropsToComponents(props);
   }
@@ -59,6 +58,23 @@ export default class ConfigLoader extends Component {
       }
     })
   }
+  mapPropsToTableView(props, initial) {
+    Object.keys(props).map((key, index) => {
+      const type = props[key].type;
+      switch(type) {
+        case 'object':
+          initial.push(
+            <div>
+              <h3>{key} Configuration</h3>
+              <TableView config={props[key].properties} />
+            </div>
+          );
+          this.mapPropsToTableView(props[key].properties, initial);
+          return;
+      }
+    });
+    return initial;
+  }
   showJSONView() {
     this.setState({selected: 'json-view'});
   }
@@ -87,18 +103,12 @@ export default class ConfigLoader extends Component {
           </code>
         </pre>
         <h2>Table View</h2>
-        <div>
-          <h3>Server Configuration</h3>
-          <TableView config={this.state.props} />
-          <h3>Database Configuration</h3>
-          <TableView config={this.state.props.databases.properties.foo_db.properties} />
-          <h3>CORS Configuration</h3>
-          <TableView config={this.state.props.CORS.properties} />
-          <h3>Cache Configuration</h3>
-          <TableView config={this.state.props.databases.properties.foo_db.properties.cache.properties} />
-          <h3>User Configuration</h3>
-          <TableView config={this.state.props.databases.properties.foo_db.properties.users.properties.foo_user.properties} />
-        </div>
+        {this.mapPropsToTableView(this.state.props, [
+          <div>
+            <h3>Server Configuration</h3>
+            <TableView config={this.state.props} />
+          </div>
+        ])}
       </div>
     );
   }
