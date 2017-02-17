@@ -77,6 +77,13 @@ export default class ConfigLoader extends Component {
           <button onClick={this.showTableView.bind(this)}>Table view</button>
         </div>
         <br />
+        <h2>Explorer</h2>
+        <div className={this.isActive('json-view')}>
+          {'{'}<ul style={styles.list}>
+            {items}
+            </ul>{'}'}
+        </div>
+        <h2>JSON View</h2>
         <pre>
           <code>
             <pre>
@@ -84,7 +91,8 @@ export default class ConfigLoader extends Component {
             </pre>
           </code>
         </pre>
-        <div className={this.isActive('table-view')}>
+        <h2>Table View</h2>
+        <div>
           <h2>Server Configuration</h2>
           <TableView config={this.state.props} />
           <h2>Database Configuration</h2>
@@ -95,11 +103,6 @@ export default class ConfigLoader extends Component {
           <TableView config={this.state.props.databases.properties.foo_db.properties.cache.properties} />
           <h2>User Configuration</h2>
           <TableView config={this.state.props.databases.properties.foo_db.properties.users.properties.foo_user.properties} />
-        </div>
-        <div className={this.isActive('json-view')}>
-          {'{'}<ul style={styles.list}>
-            {items}
-            </ul>{'}'}
         </div>
       </div>
     );
